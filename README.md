@@ -1,6 +1,6 @@
 # earendil
 
-<!-- [![PyPI](https://img.shields.io/pypi/v/earendil)](https://pypi.org/project/earendil/) -->
+<[![PyPI](https://img.shields.io/pypi/v/earendil)](https://pypi.org/project/earendil/)
 [![Travis CI](https://img.shields.io/travis/com/agrif/earendil/master)](https://travis-ci.com/agrif/earendil)
 [![Read the Docs](https://img.shields.io/readthedocs/earendil-irc/latest)][docs]
 
