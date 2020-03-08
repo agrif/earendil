@@ -18,7 +18,7 @@ to sections of the RFC.
 ## {{section.title}} { #section-{{section.name}} }
 
 {% for msg in messages if msg.section == section.name %}
-### {{msg.format}} { #msg-{{msg.name}} }
+### {{msg.format|e}} { #msg-{{msg.name}} }
 Name: *{{msg.name}}*
 
 {% if msg.related %}

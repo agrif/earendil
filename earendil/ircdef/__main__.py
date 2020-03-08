@@ -4,19 +4,11 @@ import json
 import sys
 
 import earendil.ircdef.parser
-
-import jinja2
+import earendil.ircdef.template
 
 import markdown
 
 import pkg_resources
-
-
-# custom class to turn off html processing
-class EscapeHtml(markdown.extensions.Extension):
-    def extendMarkdown(self, md):  # noqa: N802
-        md.preprocessors.deregister('html_block')
-        md.inlinePatterns.deregister('html')
 
 
 parser = argparse.ArgumentParser(
@@ -31,13 +23,6 @@ parser.add_argument('input', nargs='?',
 
 
 def main(args, fname, f):
-    env = jinja2.Environment(
-        loader=jinja2.PackageLoader('earendil.ircdef', 'formats'),
-        autoescape=jinja2.select_autoescape(['html']),
-        trim_blocks=True,
-        lstrip_blocks=True,
-        line_comment_prefix=None,
-    )
     parser = earendil.ircdef.parser.DefinitionParser()
     try:
         result = parser.parse(fname, f)
@@ -45,17 +30,15 @@ def main(args, fname, f):
         e.format(file=sys.stderr)
         sys.exit(1)
 
-    result_kwargs = {k.replace('-', '_'): v for k, v in result.items()}
-
     if args.format == 'json':
         output = json.dumps(result, indent=2)
     elif args.format == 'markdown':
-        output = env.get_template('markdown.md').render(**result_kwargs)
+        output = earendil.ircdef.template.render('markdown.md', result)
     elif args.format == 'html':
-        md = env.get_template('markdown.md').render(**result_kwargs)
+        md = earendil.ircdef.template.render('markdown.md', result)
         output = markdown.markdown(
             md,
-            extensions=['toc', 'smarty', 'attr_list', EscapeHtml()],
+            extensions=['toc', 'smarty', 'attr_list'],
             output_format='html5',
         )
     else:

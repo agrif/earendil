@@ -41,6 +41,11 @@ setup(
     extras_require={
         'docs': ['mkdocs >= 1.0', 'mkautodoc >= 0.1.0'],
     },
+    entry_points={
+        'mkdocs.plugins': [
+            'earendil-ircdef = earendil.ircdef.mkdocs:Plugin',
+        ],
+    },
     version_config={
         'version_format': '{tag}.dev{sha}',
     },
