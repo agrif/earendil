@@ -21,7 +21,7 @@ setup(
 
     project_urls={
         'Source': 'https://github.com/agrif/earendil/',
-        'Documentation': 'https://earendil.readthedocs.io/en/latest/',
+        'Documentation': 'https://earendil-irc.readthedocs.io/en/latest/',
     },
 
     keywords='irc specification',
