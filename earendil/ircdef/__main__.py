@@ -14,7 +14,7 @@ import pkg_resources
 
 # custom class to turn off html processing
 class EscapeHtml(markdown.extensions.Extension):
-    def extendMarkdown(self, md):
+    def extendMarkdown(self, md):  # noqa: N802
         md.preprocessors.deregister('html_block')
         md.inlinePatterns.deregister('html')
 

@@ -42,7 +42,7 @@ varsep : -> sep_none
 '''
 
 
-message_parser = lark.Lark(message_grammar, parser='lalr', start='message', debug=True)
+message_parser = lark.Lark(message_grammar, parser='lalr', start='message')
 
 
 class ParseError(Exception):
