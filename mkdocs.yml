@@ -1,0 +1,13 @@
+site_name: earendil
+theme: readthedocs
+nav:
+  - index.md
+
+extra_css:
+  - css/custom.css
+
+markdown_extensions:
+  - admonition
+  - codehilite
+  - smarty
+  - mkautodoc
