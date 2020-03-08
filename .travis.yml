@@ -23,6 +23,9 @@ matrix:
     - name: "Lint and Code Style"
       python: "3.7"
       env: TOXENV=lint
+    - name: "Specification"
+      python: "3.7"
+      env: TOXENV=schema
     - name: "Documentation"
       python: "3.7"
       env: TOXENV=docs

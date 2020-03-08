@@ -26,7 +26,7 @@ def main(args, fname, f):
     parser = earendil.ircdef.parser.DefinitionParser()
     try:
         result = parser.parse(fname, f)
-    except earendil.parser.ParseError as e:
+    except earendil.ircdef.parser.ParseError as e:
         e.format(file=sys.stderr)
         sys.exit(1)
 
