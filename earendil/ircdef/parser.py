@@ -28,8 +28,7 @@ message : verb argument*
 literal : NAME | REST | WORD
 
 variable : "<" varspec ">" -> var_required
-         | "[" varspec "]" -> var_leftassoc
-         | "(" varspec ")" -> var_rightassoc
+         | "[" varspec "]" -> var_optional
 
 varspec : NAME varsep -> type_plain
         | "#" NAME varsep -> type_channel
@@ -244,7 +243,6 @@ class DefinitionParser(SectionParser):
         else:
             raise NotImplementedError(verb.type)
 
-        assoc = {'left', 'right'}
         arguments = []
         fields['arguments'] = arguments
         for argtree in tree.children[1:]:
@@ -259,11 +257,6 @@ class DefinitionParser(SectionParser):
                     tok = str(tok)
                 arg['type-argument'] = tok
             else:
-                if argtree.data == 'var_leftassoc':
-                    assoc.intersection_update({'left'})
-                elif argtree.data == 'var_rightassoc':
-                    assoc.intersection_update({'right'})
-
                 spec = argtree.children[0]
                 tyarg = None
                 if spec.data == 'type_plain':
@@ -305,9 +298,6 @@ class DefinitionParser(SectionParser):
                     arg['type'] = 'optional'
                     arg['inner'] = innerarg
 
-        if not assoc:
-            raise ParseError('mixed associativity in message')
-        fields['associativity'] = list(sorted(assoc))[0]
         fields['format'] = value
         fields['section'] = self.sections[-1]['name']
 
@@ -319,6 +309,11 @@ class DefinitionParser(SectionParser):
     def push_field_message_related(self, value):
         verbs = [v.strip() for v in value.split(',')]
         return verbs
+
+    def push_field_message_associativity(self, value):
+        value = value.strip()
+        self.assure_regex(value, r'left|right')
+        return value
 
     def push_field_message_documentation(self, value):
         # FIXME markdown render here??

@@ -16,20 +16,23 @@ to sections of the RFC.
 
 {% for section in sections %}
 ## {{section.title}} { #section-{{section.name}} }
-
 {% for msg in messages if msg.section == section.name %}
+
 ### {{msg.format|e}} { #msg-{{msg.name}} }
 Name: *{{msg.name}}*
+{% if msg.associativity == 'right' %}
 
+Arguments bind right-to-left.
+{% endif %}
 {% if msg.related %}
+
 Related: {% for rel in msg.related %}
 *[{{rel}}](#msg-{{rel}})*{% if not loop.last %}, {% endif %}
 {% endfor %}.
 {% endif %}
-
 {% if msg.documentation %}
+
 {{msg.documentation | safe}}
 {% endif %}
-
 {% endfor %}
 {% endfor %}

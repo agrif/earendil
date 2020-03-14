@@ -32,7 +32,6 @@ name: message
                     'name': 'message',
                     'verb': 'MSG',
                     'type': 'text',
-                    'associativity': 'left',
                     'format': 'MSG <arg>',
                     'section': 'hello',
                     'arguments': [

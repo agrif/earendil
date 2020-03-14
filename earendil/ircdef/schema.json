@@ -31,7 +31,7 @@
                 "type": "object",
                 "additionalProperties": false,
                 "required": ["name", "verb", "type", "arguments",
-                             "associativity", "format", "section"],
+                             "format", "section"],
                 "properties": {
                     "name": {"$ref": "#/definitions/name"},
                     "related": {

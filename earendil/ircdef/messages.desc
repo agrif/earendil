@@ -96,7 +96,8 @@ Message: STATS [query] [target]
 name: stats
 related: 402, 211, 242, 212, 243, 219
 
-Message: LINKS (server) (mask)
+Message: LINKS [server] [mask]
+associativity: right
 name: links
 related: 402, 364, 365
 
