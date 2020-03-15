@@ -255,48 +255,41 @@ class DefinitionParser(SectionParser):
                     tok = str(tok)[1:]
                 else:
                     tok = str(tok)
-                arg['type-argument'] = tok
+                arg['value'] = tok
             else:
                 spec = argtree.children[0]
-                tyarg = None
                 if spec.data == 'type_plain':
-                    name, sep = spec.children
-                    ty = 'str'
+                    arg['name'], sep = spec.children
+                    arg['type'] = 'str'
                 elif spec.data == 'type_channel':
-                    name, sep = spec.children
-                    ty = 'channel'
+                    arg['name'], sep = spec.children
+                    arg['type'] = 'channel'
                 elif spec.data == 'type_other':
-                    name, sep = spec.children[-2:]
-                    ty = str(spec.children[0])
+                    arg['name'], sep = spec.children[-2:]
+                    arg['type'] = str(spec.children[0])
                     if len(spec.children) == 4:
-                        tyarg = str(spec.children[1])
+                        arg['value'] = str(spec.children[1])
 
-                if ty not in {'channel', 'str', 'int', 'flag', 'literal'}:
-                    raise ParseError('unknown argument type {!r}'.format(ty))
-                if tyarg is not None and ty not in {'flag', 'literal'}:
+                if arg['type'] not in {'channel', 'str', 'int', 'flag',
+                                       'literal'}:
                     raise ParseError(
-                        'type {!r} cannot have argument'.format(ty))
+                        'unknown argument type {!r}'.format(arg['type']))
+                if arg.get('value') is not None \
+                   and arg['type'] not in {'flag', 'literal'}:
+                    raise ParseError(
+                        'type {!r} cannot have value'.format(arg['type']))
 
-                arg['name'] = str(name)
-                innerarg = dict(type=str(ty))
-                if tyarg is not None:
-                    innerarg['type-argument'] = tyarg
                 if sep.data == 'sep_none':
                     pass
                 elif sep.data == 'sep_space':
-                    innerarg = dict(inner=innerarg)
-                    innerarg['type'] = 'space-list'
+                    arg['list'] = 'space'
                 elif sep.data == 'sep_comma':
-                    innerarg = dict(inner=innerarg)
-                    innerarg['type'] = 'comma-list'
+                    arg['list'] = 'comma'
                 else:
                     raise RuntimeError(sep.data)
 
-                if argtree.data == 'var_required':
-                    arg.update(innerarg)
-                else:
-                    arg['type'] = 'optional'
-                    arg['inner'] = innerarg
+                if argtree.data == 'var_optional':
+                    arg['optional'] = True
 
         fields['format'] = value
         fields['section'] = self.sections[-1]['name']

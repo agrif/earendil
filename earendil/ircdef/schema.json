@@ -46,24 +46,7 @@
                     "verb": {"type": ["string", "integer"]},
                     "arguments": {
                         "type": "array",
-                        "items": {
-                            "$comment": "it's an argument, with required name",
-                            "allOf": [
-                                {"$ref": "#/definitions/argument"},
-                                {
-                                    "if": {
-                                        "properties": {
-                                            "type": {"const": "literal"}
-                                        }
-                                    },
-                                    "then": {},
-                                    "else": {
-                                        "type": "object",
-                                        "required": ["name"]
-                                    }
-                                }
-                            ]
-                        }
+                        "items": {"$ref": "#/definitions/argument"}
                     },
                     "associativity": {"enum": ["left", "right"]},
                     "format": {"type": "string"},
@@ -106,77 +89,42 @@
         },
         "argument": {
             "type": "object",
-            "$comment": "names are optinally validated here, but the rest",
-            "$comment": "is conditional on type, done later.",
+            "$comment": "requirements are conditional on type, done later.",
+            "additionalProperties": false,
+            "required": ["type"],
             "properties": {
                 "type": {"enum": [
-                    "channel", "str", "int", "flag", "literal",
-                    "space-list", "comma-list", "optional"
+                    "channel", "str", "int", "flag", "literal"
                 ]},
-                "name": {"$ref": "#/definitions/name"}
+                "value": {},
+                "name": {"$ref": "#/definitions/name"},
+                "optional": {"type": "boolean"},
+                "list": {"enum": ["none", "space", "comma"]}
             },
             "allOf": [
                 {
-                    "$comment": "container types",
+                    "$comment": "only literals and flags have an argument",
                     "if": {
-                        "properties": {"type": {"enum": [
-                            "space-list", "comma-list", "optional"
-                        ]}}
+                        "properties": {"type": {"enum": ["literal", "flag"]}}
                     },
                     "then": {
-                        "additionalProperties": false,
-                        "required": ["type", "inner"],
+                        "required": ["value"],
                         "properties": {
-                            "type": {},
-                            "name": {},
-                            "inner": {"$ref": "#/definitions/argument"}
+                            "value": {"type": "string"}
                         }
+                    },
+                    "else": {
+                        "not": {"required": ["value"]}
                     }
                 },
                 {
-                    "$comment": "simple types",
-                    "if": {
-                        "properties": {"type": {"enum": [
-                            "channel", "str", "int"
-                        ]}}
-                    },
-                    "then": {
-                        "additionalProperties": false,
-                        "required": ["type"],
-                        "properties": {
-                            "type": {},
-                            "name": {}
-                        }
-                    }
-                },
-                {
-                    "$comment": "literals must have a string argument",
+                    "$comment": "only literals do not need names",
                     "if": {
                         "properties": {"type": {"const": "literal"}}
                     },
-                    "then": {
-                        "additionalProperties": false,
-                        "required": ["type", "type-argument"],
-                        "properties": {
-                            "type": {},
-                            "name": {},
-                            "type-argument": {"type": "string"}
-                        }
-                    }
-                },
-                {
-                    "$comment": "flags can only have certain arguments",
-                    "if": {
-                        "properties": {"type": {"const": "flag"}}
-                    },
-                    "then": {
-                        "additionalProperties": false,
-                        "required": ["type", "type-argument"],
-                        "properties": {
-                            "type": {},
-                            "name": {},
-                            "type-argument": {"enum": ["o"]}
-                        }
+                    "then": {"not": {"required": ["name"]}},
+                    "else": {
+                        "required": ["name"]
                     }
                 }
             ]
