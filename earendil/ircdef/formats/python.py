@@ -208,9 +208,9 @@ class {{msg.name|camelcase}}(Message):
         {% endfor %}
         {% endif %}
         return cls(
-            source,
+            source=source,
             {% for arg in msg.arguments if arg.type != 'literal' %}
-            v_{{arg.name|snakecase}},
+            {{arg.name|snakecase}}=v_{{arg.name|snakecase}},
             {% endfor %}
         )
 
