@@ -14,7 +14,7 @@ import pkg_resources
 parser = argparse.ArgumentParser(
     description='Compile an IRC definition.')
 parser.add_argument('-f', '--format', default='json',
-                    choices=['json', 'markdown', 'html'],
+                    choices=['json', 'markdown', 'html', 'python'],
                     help='output format to use')
 parser.add_argument('-o', '--output',
                     help='output file name (default: stdout)')
@@ -41,6 +41,8 @@ def main(args, fname, f):
             extensions=['toc', 'smarty', 'attr_list'],
             output_format='html5',
         )
+    elif args.format == 'python':
+        output = earendil.ircdef.template.render('python.py', result)
     else:
         raise RuntimeError('unknown output format {}'.format(args.format))
 
